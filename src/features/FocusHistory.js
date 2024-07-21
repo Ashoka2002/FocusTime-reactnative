@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { colors } from '../utils/color';
-import { fontSizes, spacing } from '../utils/sizes';
+import React from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import { colors } from "../utils/color";
+import { fontSizes, spacing } from "../utils/sizes";
 
 export const FocusHistory = ({ history }) => {
   if (!history || !history.length) return <Text style={styles.title}>Things we haven't focused on yet </Text>;
@@ -19,16 +19,17 @@ export const FocusHistory = ({ history }) => {
 const styles = StyleSheet.create({
   container: {
     padding: spacing.md,
-    flex:1,
+    flex: 1,
   },
   item: {
     fontSize: fontSizes.md,
     color: colors.white,
-    paddingTop: spacing.sm
+    paddingTop: spacing.sm,
   },
   title: {
+    marginTop: 40,
     color: colors.white,
-    fontSize: fontSizes.md,
-    fontWeight: 'bold',
+    fontSize: fontSizes.lg,
+    textTransform: "uppercase",
   },
 });

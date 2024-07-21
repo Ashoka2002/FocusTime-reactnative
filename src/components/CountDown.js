@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text } from "react-native";
 
-import { fontSizes, spacing } from '../utils/sizes';
-import { colors } from '../utils/color';
+import { colors } from "../utils/color";
+import { fontSizes, spacing } from "../utils/sizes";
 
 const minutesToMillis = (min) => min * 1000 * 60;
 const formatTime = (time) => (time < 10 ? `0${time}` : time);
@@ -11,7 +11,7 @@ export const Countdown = ({ minutes = 0.1, isPaused, onProgress, onEnd }) => {
   const interval = React.useRef(null);
   const [millis, setMillis] = useState(null);
 
-const resetMillis = ()=>setMillis(minutesToMillis(minutes));
+  const resetMillis = () => setMillis(minutesToMillis(minutes));
 
   const countDown = () => {
     setMillis((time) => {
@@ -19,7 +19,7 @@ const resetMillis = ()=>setMillis(minutesToMillis(minutes));
         clearInterval(interval.current);
         onEnd(resetMillis);
         return time;
-      }   
+      }
       const timeLeft = time - 1000;
       return timeLeft;
     });
@@ -56,10 +56,12 @@ const resetMillis = ()=>setMillis(minutesToMillis(minutes));
 const styles = StyleSheet.create({
   text: {
     fontSize: fontSizes.xxxl,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.white,
     padding: spacing.lg,
-    backgroundColor: 'rgba(94, 132, 226, 0.3)',
-    borderRadius: 20,
+    backgroundColor: "rgba(94, 132, 226, 0.35)",
+    borderRadius: 25,
+    borderWidth: 4,
+    borderColor: colors.blue,
   },
 });
