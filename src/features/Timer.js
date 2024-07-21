@@ -8,6 +8,7 @@ import { RoundedButton } from "../components/RoundedButton";
 import { colors } from "../utils/color";
 import { fontSizes, spacing } from "../utils/sizes";
 import { Timing } from "./Timing";
+import { StringEllipsis } from "../utils/StringEllipsis";
 
 const ONE_SECOND_IN_MS = 1000;
 
@@ -20,11 +21,13 @@ const PATTERN = [
   0.5 * ONE_SECOND_IN_MS,
 ];
 
+let isTimeEnded;
+
 export const Timer = ({ focusSubject, clearSubject, onTimerEnd }) => {
   useKeepAwake();
   const [isStarted, setIsStarted] = useState(false);
   const [progress, setProgress] = useState(1);
-  const [minutes, setMinutes] = useState(0.5);
+  const [minutes, setMinutes] = useState(0.05); // beware of it can prduce error !!!!
 
   const onEnd = (resetMillis) => {
     Vibration.vibrate(PATTERN);
@@ -32,6 +35,7 @@ export const Timer = ({ focusSubject, clearSubject, onTimerEnd }) => {
     setProgress(1);
     resetMillis();
     onTimerEnd(focusSubject);
+    isTimeEnded = true;
   };
 
   const addTime = () => setMinutes((prev) => prev + 0.5);
@@ -43,7 +47,7 @@ export const Timer = ({ focusSubject, clearSubject, onTimerEnd }) => {
         <Countdown minutes={minutes} isPaused={!isStarted} onProgress={setProgress} onEnd={onEnd} />
         <View style={{ paddingTop: spacing.xxl, marginTop: -15 }}>
           <Text style={styles.title}>Focusing on:</Text>
-          <Text style={styles.task}>{focusSubject}</Text>
+          <Text style={styles.task}>{StringEllipsis(focusSubject, 30)}</Text>
         </View>
       </View>
 
@@ -61,17 +65,25 @@ export const Timer = ({ focusSubject, clearSubject, onTimerEnd }) => {
 
       <View style={styles.buttonWrapper}>
         <RoundedButton size={50} title="-" onPress={subtractTime}>
-          <MaterialIcons name="add" size={24} color="white" />
+          <MaterialIcons name="remove" size={24} color="white" />
         </RoundedButton>
-        {!isStarted && <RoundedButton title="start" onPress={() => setIsStarted(true)} />}
+        {!isStarted && (
+          <RoundedButton
+            title="start"
+            onPress={() => {
+              setIsStarted(true);
+              isTimeEnded = false;
+            }}
+          />
+        )}
         {isStarted && <RoundedButton title="pause" onPress={() => setIsStarted(false)} />}
         <RoundedButton size={50} title="+" onPress={addTime}>
-          <MaterialIcons name="remove" size={24} color="white" />
+          <MaterialIcons name="add" size={24} color="white" />
         </RoundedButton>
       </View>
 
       <View style={styles.clearSubjectWrapper}>
-        <RoundedButton size={50} onPress={clearSubject}>
+        <RoundedButton size={50} onPress={() => clearSubject(isTimeEnded, focusSubject)}>
           <MaterialIcons name="clear" size={24} color="white" />
         </RoundedButton>
       </View>
@@ -120,7 +132,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginVertical: 8,
     paddingVertical: 4,
-    letterSpacing: 1.5,
+    paddingHorizontal: 8,
     backgroundColor: colors.backgroundDarkOpacity,
     borderWidth: 1,
     borderColor: colors.blue,

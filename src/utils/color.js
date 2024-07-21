@@ -4,4 +4,5 @@ export const colors = {
   blue: "#0077dd",
   lightBlue: "#bcf8f6",
   backgroundDarkOpacity: "rgba(0,0,10,.3)",
+  red: "red",
 };
