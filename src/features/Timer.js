@@ -27,7 +27,7 @@ export const Timer = ({ focusSubject, clearSubject, onTimerEnd }) => {
   useKeepAwake();
   const [isStarted, setIsStarted] = useState(false);
   const [progress, setProgress] = useState(1);
-  const [minutes, setMinutes] = useState(0.05); // beware of it can prduce error !!!!
+  const [minutes, setMinutes] = useState(1); // beware of it can prduce error !!!!
 
   const onEnd = (resetMillis) => {
     Vibration.vibrate(PATTERN);
