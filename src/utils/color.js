@@ -5,4 +5,5 @@ export const colors = {
   lightBlue: "#bcf8f6",
   backgroundDarkOpacity: "rgba(0,0,10,.3)",
   red: "red",
+  inputcolor: "blue",
 };

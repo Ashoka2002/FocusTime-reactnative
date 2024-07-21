@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ImageBackground, Platform, SafeAreaView, StatusBar, StyleSheet } from "react-native";
+import { Alert, ImageBackground, Platform, SafeAreaView, StatusBar, StyleSheet } from "react-native";
 
 import { Focus } from "./src/features/Focus";
 import { FocusHistory } from "./src/features/FocusHistory";
@@ -19,8 +19,8 @@ export default function App() {
     (async function () {
       try {
         const historyArray = await AsyncStorage.getItem("focusHistory");
-        console.log("history", historyArray);
-        historyArray && sethistory(JSON.parse(historyArray));
+        if (historyArray) sethistory(JSON.parse(historyArray));
+        else sethistory([]);
       } catch (e) {
         console.log("error in getting async", e);
       }
@@ -29,8 +29,19 @@ export default function App() {
 
   //set history
   useEffect(() => {
-    history && history.length && AsyncStorage.setItem("focusHistory", JSON.stringify(history));
+    AsyncStorage.setItem("focusHistory", JSON.stringify(history));
   }, [history]);
+
+  const handleClearStorage = () => {
+    async function deleteHistory() {
+      sethistory([]);
+    }
+
+    Alert.alert("Alert!", "Are you sure you want to delete this focus list?", [
+      { text: "No" },
+      { text: "Yes", onPress: deleteHistory },
+    ]);
+  };
 
   return (
     <>
@@ -39,7 +50,7 @@ export default function App() {
         {!currentSubject ? (
           <>
             <Focus addSubject={setCurrentSubject} />
-            <FocusHistory history={history} />
+            <FocusHistory history={history} onClearHistory={handleClearStorage} />
           </>
         ) : (
           <Timer
@@ -56,7 +67,6 @@ export default function App() {
             }
             clearSubject={(isTimeEnded, subject) => {
               setCurrentSubject(null);
-              console.log(isTimeEnded);
               if (!isTimeEnded) {
                 sethistory([
                   {
